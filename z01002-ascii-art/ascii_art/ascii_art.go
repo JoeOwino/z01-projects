@@ -153,7 +153,7 @@ func getCi(substring, text string) (ci, n int) {
 
 // ProcessInput accepts the contents of the ASCII art file and the input string,
 // and processes the input to display the corresponding ASCII art
-func ProcessInput(contents []string, input, color, subString string) (strArt string) {
+func ProcessInput(contents []string, input, color, subString, align string) (strArt string) {
 	count := 0
 	strInput := strings.ReplaceAll(input, "\n", "\\n")
 	strInput = strings.ReplaceAll(strInput, "\\t", "    ")
@@ -168,13 +168,13 @@ func ProcessInput(contents []string, input, color, subString string) (strArt str
 			count++
 			if count < len(newInput) {
 				strArt += "\n"
-				continue
-			} else {
-				continue
-			}
+			} 
+			continue
 		}
 
 		for i := 1; i <= 8; i++ {
+			strLine := ""
+
 			if subString != "" && subString != input {
 				start, n = getCi(subString, arg)
 			}
@@ -193,10 +193,10 @@ func ProcessInput(contents []string, input, color, subString string) (strArt str
 
 				if index >= 0 && index < len(contents) {
 					if start == j {
-						strArt += color
+						strLine += color
 					}
 
-					strArt += (contents[index])
+					strLine += (contents[index])
 
 					if start != -1 && start+n-1 == j && j < len(arg)-1 && subString != "" && subString != input {
 						strArt += ColorPicker("reset")
@@ -206,7 +206,8 @@ func ProcessInput(contents []string, input, color, subString string) (strArt str
 
 				}
 			}
-			strArt += ColorPicker("reset") + "\n"
+			strLine += ColorPicker("reset")
+			strArt += Align(strLine, align) + "\n"
 		}
 	}
 

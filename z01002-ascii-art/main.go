@@ -68,10 +68,8 @@ func main() {
 	}
 
 	contents := a.GetFile(bannerFile)
-	//input = a.Justify(input, "center")
+	
+	str := a.ProcessInput(contents, input, color, subString, "right")
 
-	//fmt.Print(a.ProcessInput(contents, input, color, subString))
-
-	str := a.ProcessInput(contents, input, color, subString)
-	print(a.Align(str, "right"))
+	print(str)
 }
