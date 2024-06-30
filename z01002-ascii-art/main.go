@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
+	//"strings"
 
 	a "ascii/ascii_art"
 )
@@ -25,12 +25,15 @@ func main() {
 	subString := input
 
 	flgColor := flag.String("color", "reset", "Color")
+	flgAlign := flag.String("align", "left", "Align")
+
 	flag.Parse()
-	if (!strings.Contains(os.Args[1], "--color=") && flag.NFlag() == 1) || *flgColor == "" {
-		fmt.Println(ErrorText)
-		os.Exit(1)
-	}
+	// if (!strings.Contains(os.Args[1], "--color=") && flag.NFlag() == 1) || *flgColor == "" {
+	// 	fmt.Println(ErrorText)
+	// 	os.Exit(1)
+	// }
 	color := a.ColorPicker(*flgColor)
+	align := *flgAlign
 
 	args := flag.Args()    // Non flags arguments
 	nArgs := len(args)     // Count of non flag arguments
@@ -69,7 +72,7 @@ func main() {
 
 	contents := a.GetFile(bannerFile)
 	
-	str := a.ProcessInput(contents, input, color, subString, "right")
+	str := a.ProcessInput(contents, input, color, subString, align)
 
 	print(str)
 }

@@ -1,7 +1,7 @@
 package ascii_art
 
 import (
-	//"fmt"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
@@ -20,23 +20,79 @@ func getTerminalSize() int {
 }
 
 func Align(str, align string) string {
-	if align == "left" {
+	if len(str) >= getTerminalSize() {
 		return str
 	}
 
 	padding := getTerminalSize() - len(str)
 
 	if align == "center" {
-		padding = (padding / 2) + (len(str)/2) 
+		padding = (padding / 2) //- (len(str)/2)
 	}
 
-	//format := fmt.Sprintf("%%%ds", padding)
-	//strAlign += fmt.Sprintf(format, str)
+	// format := fmt.Sprintf("%%%ds", padding)
+	// strAlign += fmt.Sprintf(format, str)
 	return strings.Repeat(" ", padding) + str
-
 }
 
-func justify() string {
+func Justify(txt string, bannerConts []string) (strJust string) {
+	spaces := len(strings.Fields(strings.TrimSpace(txt))) - 1
+
+	if spaces < 1 {
+		return txt
+	}
+
+	txtLen := 0
+	inSpace := 0
+	strLead := ""
+	strTrail := ""
+	strTxt := ""
+	isLeading := true
+	for i, ch := range txt {
+		if ch == ' ' {
+			if isLeading {
+				txtLen += len(bannerConts[int(ch-32)*9+1])
+				strLead += " "
+			} else {
+				inSpace += len(bannerConts[int(ch-32)*9+1])
+				strTrail += " "	
+			}
+		} else {
+			if isLeading {
+				txtLen += len(bannerConts[int(ch-32)*9+1])
+				isLeading = false
+			} else {
+				txtLen += len(bannerConts[int(ch-32)*9+1]) + len(bannerConts[1])
+				inSpace = 0
+				strTrail = ""
+			}
+			if i != 0 && txt[i - 1] == ' ' && !isLeading {
+				strTxt  += " "
+			}
+			strTxt += string(ch)
+		}
+	}
+
+	txtLen += inSpace
 	
-	return ""
+	txtLen -= spaces * len(bannerConts[1])
+	if txtLen >= getTerminalSize() {
+		fmt.Println(txt)
+		return txt
+	}
+
+	justSpaces := ((getTerminalSize() - txtLen) / spaces) / len(bannerConts[1])
+	padding := strings.Repeat(" ", justSpaces)
+
+	for _, ch := range strTxt {
+		if ch == ' ' {
+			strJust += padding
+		} else {
+			strJust += string(ch)
+		}
+	}
+
+	strJust = strLead + strJust + strTrail
+
+	return strJust
 }

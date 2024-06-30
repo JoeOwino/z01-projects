@@ -157,7 +157,14 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 	count := 0
 	strInput := strings.ReplaceAll(input, "\n", "\\n")
 	strInput = strings.ReplaceAll(strInput, "\\t", "    ")
+
+	if align == "justify" {
+		strInput = Justify(strInput, contents)
+		//subString = Justify(subString, contents)
+	}
+
 	newInput := strings.Split(strInput, "\\n")
+
 
 	start := -1
 	n := 0
@@ -195,7 +202,7 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 					if start == j {
 						strLine += color
 					}
-
+					
 					strLine += (contents[index])
 
 					if start != -1 && start+n-1 == j && j < len(arg)-1 && subString != "" && subString != input {
@@ -207,7 +214,10 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 				}
 			}
 			strLine += ColorPicker("reset")
-			strArt += Align(strLine, align) + "\n"
+			if align == "center" || align == "right" {
+				strLine = Align(strLine, align)
+			}
+			strArt += strLine + "\n"
 		}
 	}
 
