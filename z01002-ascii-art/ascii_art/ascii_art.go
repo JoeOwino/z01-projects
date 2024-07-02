@@ -122,7 +122,7 @@ func ColorPicker(color string) (colorCode string) {
 				}
 			} else {
 				fmt.Println(rgbErr)
-				os.Exit(1)	
+				os.Exit(1)
 			}
 		}
 	}
@@ -144,7 +144,13 @@ func getCi(substring, text string) (ci, n int) {
 	for _, word = range arrSubSrting {
 		ci = strings.Index(text, word)
 		if ci != -1 {
-			return ci, len(word)
+			if len(arrSubSrting) > 1 {
+				if ci == 0 || ci == len(text)-len(word) {
+					return ci, len(word)
+				}
+			} else {
+				return ci, len(word)
+			}
 		}
 	}
 
@@ -158,13 +164,12 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 	strInput := strings.ReplaceAll(input, "\n", "\\n")
 	strInput = strings.ReplaceAll(strInput, "\\t", "    ")
 
-	if align == "justify" {
-		strInput = Justify(strInput, contents)
-		//subString = Justify(subString, contents)
-	}
+	// if align == "justify" {
+	// 	strInput = Justify(strInput, color, contents)
+	// 	subString = Justify(subString, color, contents)
+	// }
 
 	newInput := strings.Split(strInput, "\\n")
-
 
 	start := -1
 	n := 0
@@ -175,14 +180,17 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 			count++
 			if count < len(newInput) {
 				strArt += "\n"
-			} 
+			}
 			continue
 		}
 
 		for i := 1; i <= 8; i++ {
 			strLine := ""
+			lenColor := 0
+			isLeading := true
+			traillingSpace := ""
 
-			if subString != "" && subString != input {
+			if subString != "" && subString != input && strings.Contains(input, subString) {
 				start, n = getCi(subString, arg)
 			}
 
@@ -201,21 +209,41 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 				if index >= 0 && index < len(contents) {
 					if start == j {
 						strLine += color
+						lenColor += len(color)
 					}
-					
-					strLine += (contents[index])
 
-					if start != -1 && start+n-1 == j && j < len(arg)-1 && subString != "" && subString != input {
-						strArt += ColorPicker("reset")
-						ci, _ = getCi(subString, arg[j+1:]) // strings.Index(arg[j+1:], subString) + j + 1
+					if align != "justify" {
+						strLine += (contents[index])
+					} else if ch == ' ' {
+						if isLeading {
+							strLine += (contents[index])
+						} else {
+							if j < len(arg)-1 && arg[j+1] != ' ' {
+								strLine += "j"
+								traillingSpace = ""
+							} else {
+								traillingSpace += (contents[index])
+							}
+						}
+					} else if ch != ' ' {
+						strLine += (contents[index])
+						isLeading = false
+					}
+
+					if strings.Contains(input, subString) && start+n-1 == j && j < len(arg)-1 && subString != "" && subString != input {
+						strLine += ColorPicker("reset")
+						lenColor += len(ColorPicker("reset"))
+						ci, _ = getCi(subString, arg[j+1:])
 						start = ci + j + 1
 					}
 
 				}
 			}
+			strLine += traillingSpace
 			strLine += ColorPicker("reset")
-			if align == "center" || align == "right" {
-				strLine = Align(strLine, align)
+			lenColor += len(ColorPicker("reset"))
+			if align != "left" {
+				strLine = Align(strLine, align, lenColor)
 			}
 			strArt += strLine + "\n"
 		}
