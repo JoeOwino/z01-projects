@@ -23,7 +23,7 @@ func GetFile(filename string) []string {
 	myfile := string(file)
 	var contents []string
 
-	if filename == "thinkertoy.txt" {
+	if strings.Contains(myfile, "\r") {
 		contents = strings.Split(myfile, "\r\n")
 	} else {
 		contents = strings.Split(myfile, "\n")
@@ -36,12 +36,15 @@ const hexErr = `Error: Incorrect color format
 usage: --collor=#<color code (0-9 and A-F)>`
 
 const rgbErr = `Error: Incorrect color format
-usage: --collor=#<r,g,b (0 <= r, g & b >= 255)>`
+usage: --collor=<rgb(r,g,b) (0 <= r, g & b >= 255)>`
 
 const ansiErr = `Error: Incorrect color format
 usage: --collor=ANSI Code (0 <= ANSI >= 255)>`
 
 func ColorPicker(color string) (colorCode string) {
+	if color == "" {
+		return ""
+	}
 	colorChat := map[string]string{
 		"reset":   "\u001b[39m",
 		"red":     "\u001b[31m",
@@ -240,9 +243,11 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 				}
 			}
 			strLine += traillingSpace
-			strLine += ColorPicker("reset")
-			lenColor += len(ColorPicker("reset"))
-			if align != "left" {
+			if color != "" {
+				strLine += ColorPicker("reset")
+				lenColor += len(ColorPicker("reset"))
+			}
+			if align == "right" || align == "center" || align == "justify" {
 				strLine = Align(strLine, align, lenColor)
 			}
 			strArt += strLine + "\n"
