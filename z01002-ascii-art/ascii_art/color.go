@@ -14,36 +14,42 @@ func colorMap(text, subString string) map[int]string {
 	if colorStart != -1 {
 		colorReset = colorStart + len(subString) - 1
 	}
-	
-	for i, ch := range text {
 
+	for i := 0; i < len(text); i++ {
 		if colorStart == -1 {
-			mapText[i] =string(ch) + "NA"
+			mapText[i] = "NA"
+			continue
+		}
+
+		if i > 1 && text[i-2] == '\\' && text[i-1] == 'n' && i > colorStart && i < colorReset {
+			mapText[i] = "CS"
 			continue
 		}
 
 		if i < colorStart || (i > colorStart && i < colorReset) {
-			mapText[i] = string(ch) + "NA"
+			mapText[i] = "NA"
 			continue
 		}
 
 		if i == colorStart {
-			mapText[i] = string(ch) + "CS"
-			colorReset = colorStart + len(subString) - 1
+			mapText[i] = "CS"
 			continue
 		}
 
-		if i == colorReset && i < len(text) - 1 {
-			mapText[i] = string(ch) + "CR"
-			colorStart = strings.Index(text[i + 1:], subString) + i + 1
+		if i == colorReset && i < len(text)-1 {
+			mapText[i] = "CR"
+			colorStart = strings.Index(text[i+1:], subString)
+			colorReset = len(text) - 1
+			if colorStart > -1 {
+				colorStart += i + 1
+				colorReset = colorStart + len(subString) - 1
+			}
 			continue
 		}
 
-		mapText[i] = string(ch) + "NA"
+		mapText[i] = "NA"
 
 	}
-
-
 	return mapText
 }
 
@@ -153,24 +159,4 @@ func ColorPicker(color string) (colorCode string) {
 	colorCode = fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
 
 	return colorCode
-}
-
-func getCi(substring, text string) (ci, n int) {
-	arrSubSrting := strings.Split(substring, "\\n")
-	word := ""
-
-	for _, word = range arrSubSrting {
-		ci = strings.Index(text, word)
-		if ci != -1 {
-			if len(arrSubSrting) > 1 {
-				if ci == 0 || ci == len(text)-len(word) {
-					return ci, len(word)
-				}
-			} else {
-				return ci, len(word)
-			}
-		}
-	}
-
-	return ci, len(word)
 }

@@ -43,4 +43,3 @@ func Output(asciiText, outptFile string) {
     fmt.Println("Success: File successfully written in", filePath)
 
 }
-

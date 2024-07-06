@@ -42,76 +42,77 @@ func ProcessInput(contents []string, input, color, subString, align string) (str
 
 	coloMap := colorMap(strInput, subString)
 	newInput := strings.Split(strInput, "\\n")
-	ci := 0
+	colorIndex := 0
+	indexDelta := 0
 
 	for n, arg := range newInput {
-		ci += n * 2
+		if n != 0 {
+			colorIndex = indexDelta + 2
+		}
+
 		if arg == "" {
 			count++
 			if count < len(newInput) {
 				strArt += "\n"
 			}
-			ci += 2
+			colorIndex += 2
+			indexDelta += 2
 			continue
 		}
 
 		for i := 1; i <= 8; i++ {
+			indexDelta = colorIndex
 			strLine := ""
 			lenColor := 0
 			isLeading := true
 			traillingSpace := ""
 
-			if subString != "" && subString != input && strings.Contains(input, subString) {
-				start, n = getCi(subString, arg)
-			}
-
-			if subString == input {
-				start = 0
-			}
-
 			for j, ch := range arg {
+				
 				if ch > 126 {
 					fmt.Println("The text contains an unprintable character", ch)
-					os.Exit(0)
+					os.Exit(1)
 				}
 
 				index := int(ch-32)*9 + i
-
-				if index >= 0 && index < len(contents) {
-					if start == j {
-						strLine += color
-						lenColor += len(color)
-					}
-
-					if align != "justify" {
-						strLine += (contents[index])
-					} else if ch == ' ' {
-						if isLeading {
-							strLine += (contents[index])
-						} else {
-							if j < len(arg)-1 && arg[j+1] != ' ' {
-								strLine += "j"
-								traillingSpace = ""
-							} else {
-								traillingSpace += (contents[index])
-							}
-						}
-					} else if ch != ' ' {
-						strLine += (contents[index])
-						isLeading = false
-					}
-
-					if strings.Contains(input, subString) && start+n-1 == j && j < len(arg)-1 && subString != "" && subString != input {
-						strLine += ColorPicker("reset")
-						lenColor += len(ColorPicker("reset"))
-						ci, _ = getCi(subString, arg[j+1:])
-						start = ci + j + 1
-					}
-
+				if index < 0 || index > len(contents) {
+					fmt.Println("Character", ch, "not found int the banner file")
+					os.Exit(1)
 				}
+
+				if coloMap[indexDelta] == "CS" {
+					strLine += color
+					lenColor += len(color)
+				}
+
+				if align != "justify" {
+					strLine += (contents[index])
+				} else if ch == ' ' {
+					if isLeading {
+						strLine += (contents[index])
+					} else {
+						if j < len(arg)-1 && arg[j+1] != ' ' {
+							strLine += "j"
+							traillingSpace = ""
+						} else {
+							traillingSpace += (contents[index])
+						}
+					}
+				} else if ch != ' ' {
+					strLine += (contents[index])
+					isLeading = false
+				}
+
+				if coloMap[indexDelta] == "CR" {
+					strLine += ColorPicker("reset")
+					lenColor += len(ColorPicker("reset"))
+				}
+
+				indexDelta++
+
 			}
 			strLine += traillingSpace
-			if color != "" {
+			if color != ""  {
 				strLine += ColorPicker("reset")
 				lenColor += len(ColorPicker("reset"))
 			}
