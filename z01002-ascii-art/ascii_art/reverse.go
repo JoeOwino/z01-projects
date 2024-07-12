@@ -16,6 +16,24 @@ func bannerMap(bannerContent []string) map[string]rune {
 return bMap
 }
 
+func ReverseAscii() (strRev string) {
+	strArt := GetFile("./output/output.txt")
+	bContent := GetFile("./.banners/standard.txt")
+	bMap := bannerMap(bContent)
+	strCh := ""
+
+	for _, ch := range strArt {
+		strCh += ch
+		if leter, exists := bMap[strCh] ; exists {
+			strRev += string(leter)
+			strCh = ""
+		}
+	}
+	return strRev
+}
+
+
+
 func PrintMap() {
 	bContent := GetFile("./.banners/standard.txt")
 	//strContent := strings.Join(bContent,"\n")
