@@ -127,4 +127,5 @@ func main() {
 		a.Output(str, outputFile)
 	}
 
+	a.PrintMap()
 }
