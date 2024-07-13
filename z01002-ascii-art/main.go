@@ -127,5 +127,6 @@ func main() {
 		a.Output(str, outputFile)
 	}
 
-	fmt.Println(a.ReverseAscii())
+	fmt.Print(a.ReverseAscii())
+	//a.PrintMap()
 }
