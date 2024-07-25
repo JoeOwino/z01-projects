@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	tetris "tetris/tetromino"
@@ -15,18 +16,17 @@ func main() {
 	fileName := os.Args[1]
 	arrTetris := tetris.ReadFile(fileName)
 
-	arrTetro := tetris.Assemble(arrTetris)
+	tetromino := tetris.Assemble(arrTetris)
+	n := float64(len(tetromino))
+	size := math.Ceil(math.Sqrt(n * 4))
 
-	l := 'A'
+	board := tetris.CreateBoard(int(size))
 
-	for _, s := range arrTetro {
-		//fmt.Println(string(l))
+	board = tetris.Tetris(board, tetromino)
 
-		for _, ln := range s {
-			fmt.Println(ln)
-		} 
 
-		l++
-		fmt.Println("---------------")
-	}
+	tetris.PrintBoard(board)
+
+	//tetris.Assemble(arrTetris)
+	
 }
