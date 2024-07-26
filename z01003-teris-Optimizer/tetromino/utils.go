@@ -2,9 +2,30 @@ package tetris
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strings"
 )
+
+func Tetromino() [][]string {
+	if len(os.Args) != 2 {
+		fmt.Println("Usage: go run . [FILENAME]\n\nEX: go run . sample.txt")
+		os.Exit(1)
+	}
+
+	fileName := os.Args[1]
+	arrTetris := ReadFile(fileName)
+
+	return Assemble(arrTetris)
+}
+
+func BoardSize() (size int) {
+	tetromino := Tetromino()
+	n := float64(len(tetromino))
+	size = int(math.Ceil(math.Sqrt(n * 4)))
+
+	return size
+}
 
 func ReadFile(file string) []string {
 	tetromino, err := (os.ReadFile(file))
@@ -119,12 +140,4 @@ func trimRows(tetro []string) []string {
 	}
 
 	return trimedTetro
-}
-
-func PrintSquare(tetro []string) {
-	for _, ln := range tetro {
-		fmt.Println(ln)
-	} 
-
-	fmt.Println("---------------")
 }
