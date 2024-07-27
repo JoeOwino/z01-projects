@@ -10,7 +10,7 @@ func main() {
 
 	board := tetris.CreateBoard(int(size))
 
-	board = tetris.Tetris(board, 0)
+	board = tetris.Tetris(board, 0, 0, 0)
 
 	tetris.PrintBoard(board)
 

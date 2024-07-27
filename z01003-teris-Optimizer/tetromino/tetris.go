@@ -1,17 +1,19 @@
 package tetris
 
-func Tetris(board [][]string, n int) [][]string {
+func Tetris(board [][]string, n, x, y int) [][]string {
+	if n == 8 {
+		return board
+	}
+
 	tetromino := Tetromino()
 	tetro := tetromino[n]
 
-	y := 0
 	for y < len(board) {
-		x := 0
 		arrxy := []int{}
 		for x < len(board) {
 			if IsAddable(tetro, board, x, y) {
 				AddTetro(board, tetro, x, y)
-				if n == len(tetromino) - 1 {
+				if n == len(tetromino)-1 {
 					return board
 				}
 				arrxy = append(arrxy, x, y)
@@ -28,22 +30,34 @@ func Tetris(board [][]string, n int) [][]string {
 func Iterator(board [][]string, isPlaced bool, arrxy []int, n int) {
 	tetromino := Tetromino()
 	arrAddedTetros := [][]int{}
+	size := len(board) + 1
 
 	for n < len(tetromino) {
 		if isPlaced {
 			arrAddedTetros = append(arrAddedTetros, arrxy)
 			n++
-			Tetris(board, n)
+			Tetris(board, n, 0, 0)
 		} else {
 			if n == 0 {
-				size := len(board)
 				size++
 				board = CreateBoard(size)
-				Tetris(board, n)
+				Tetris(board, n, 0, 0)
 			} else {
 				n--
 				prevAded := arrAddedTetros[len(arrAddedTetros)-1]
-				RemoveTetro(board, tetromino[n], prevAded[0], prevAded[1])
+				i := prevAded[0]
+				j := prevAded[1]
+				RemoveTetro(board, tetromino[n], i, j)
+				arrAddedTetros = arrAddedTetros[:len(arrAddedTetros)-1]
+				if j < size-1 {
+					j++
+					i = 0
+				} else {
+					j = 0
+					i++
+				}
+
+				Tetris(board, n, i, j)
 			}
 		}
 	}
