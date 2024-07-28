@@ -66,8 +66,6 @@ func Assemble(tetromino []string) (arrTetris [][]string) {
 		arrSquare = trimRows(arrSquare)
 		arrSquare = trimColumns(arrSquare)
 
-		//(arrSquare)
-
 		arrTetris = append(arrTetris, arrSquare)
 
 		l++

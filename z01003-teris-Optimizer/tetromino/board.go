@@ -1,6 +1,9 @@
 package tetris
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func CreateBoard(size int) [][]string {
 	board := make([][]string, size)
@@ -16,9 +19,6 @@ func CreateBoard(size int) [][]string {
 
 func PrintBoard(board [][] string) {
 	for _, ln := range board {
-		for _, ch := range ln {
-			fmt.Print(ch)
-		}
-		fmt.Println()
+		fmt.Println(strings.Join(ln, ""))
 	}
 }

@@ -10,9 +10,9 @@ func main() {
 
 	board := tetris.CreateBoard(int(size))
 
-	board = tetris.Tetris(board, 0, 0, []int{-1, -1})
+	board = tetris.Tetris(board, 0, 0, map[int][]int{-1 : {-1, -1}})
 
-	//tetris.PrintBoard(board)
+	tetris.PrintBoard(board)
 
 	//println("___________________________")
 
