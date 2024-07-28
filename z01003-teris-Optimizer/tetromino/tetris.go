@@ -1,91 +1,62 @@
 package tetris
 
-func Tetris(board [][]string, n, x, y int) [][]string {
-	if n == 8 {
+import "fmt"
+
+func Tetris(board [][]string, n, c int, arrAdded []int) [][]string {
+	tetromino := Tetromino()
+	size := len(tetromino)
+
+	if n == size {
 		return board
 	}
 
-	tetromino := Tetromino()
 	tetro := tetromino[n]
+	prevx := arrAdded[len(arrAdded)-2]
+	prevy := arrAdded[len(arrAdded)-1]
 
-	for y < len(board) {
-		arrxy := []int{}
-		for x < len(board) {
+	for y := 0; y < size; y++ {
+		for x := 0; x < len(board); x++ {
+
+			if x == prevx && y == prevy {
+				continue
+			}
+
 			if IsAddable(tetro, board, x, y) {
 				AddTetro(board, tetro, x, y)
-				if n == len(tetromino)-1 {
-					return board
-				}
-				arrxy = append(arrxy, x, y)
-				Iterator(board, true, arrxy, n)
-			}
-			x++
-		}
-		y++
-	}
-
-	return board
-}
-
-func Iterator(board [][]string, isPlaced bool, arrxy []int, n int) {
-	tetromino := Tetromino()
-	arrAddedTetros := [][]int{}
-	size := len(board) + 1
-
-	for n < len(tetromino) {
-		if isPlaced {
-			arrAddedTetros = append(arrAddedTetros, arrxy)
-			n++
-			Tetris(board, n, 0, 0)
-		} else {
-			if n == 0 {
-				size++
-				board = CreateBoard(size)
-				Tetris(board, n, 0, 0)
-			} else {
-				n--
-				prevAded := arrAddedTetros[len(arrAddedTetros)-1]
-				i := prevAded[0]
-				j := prevAded[1]
-				RemoveTetro(board, tetromino[n], i, j)
-				arrAddedTetros = arrAddedTetros[:len(arrAddedTetros)-1]
-				if j < size-1 {
-					j++
-					i = 0
-				} else {
-					j = 0
-					i++
-				}
-
-				Tetris(board, n, i, j)
+				arrAdded := append(arrAdded, x, y)
+				return Tetris(board, n+1, c, arrAdded)
 			}
 		}
 	}
+
+	PrintBoard(board)
+	fmt.Println(arrAdded)
+	fmt.Println("###################")
+
+
+	if n == 0 {
+		board = CreateBoard(size + 1)
+		return Tetris(board, n, c, arrAdded)
+	}
+
+	n--
+	tetro = tetromino[n]
+
+	RemoveTetro(board, tetro, prevx, prevy)
+	arrAdded = arrAdded[:len(arrAdded)-2]
+
+	PrintBoard(board)
+	fmt.Println(arrAdded)
+	fmt.Println(prevx, prevy)
+	fmt.Println("___________")
+
+	if c == 10 {
+		return board
+	} 
+	c++
+
+	return (Tetris(board, n, c, arrAdded))
 }
-
-// func Tetris(board, tetromino [][]string) [][]string {
-// 	n := 0
-// 	x := 0
-// 	for x < len(board) {
-// 		y := 0
-// 		isPlaced := false
-
-// 		for y < len(board) {
-// 			if IsAddable(tetromino[n], board, x, y) {
-// 				AddTetro(board, tetromino[n], x, y)
-// 				n++
-// 				isPlaced = true
-// 				break
-// 			}
-// 			y++
-// 		}
-// 		if !isPlaced {
-// 			x++
-// 		}
-// 	}
-
-// 	return board
-// }
 
 func IsAddable(tetro []string, board [][]string, x, y int) bool {
 	if len(board)-y < len(tetro) || len(board[0])-x < len(tetro[0]) {

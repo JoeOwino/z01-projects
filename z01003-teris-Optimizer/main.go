@@ -10,9 +10,13 @@ func main() {
 
 	board := tetris.CreateBoard(int(size))
 
-	board = tetris.Tetris(board, 0, 0, 0)
+	board = tetris.Tetris(board, 0, 0, []int{-1, -1})
 
-	tetris.PrintBoard(board)
+	//tetris.PrintBoard(board)
+
+	//println("___________________________")
+
+	//tetris.PrintBoard(tetris.RemoveTetro(board, tetris.Tetromino()[4], 4, 1))
 
 	// tetris.Assemble(arrTetris)
 }
