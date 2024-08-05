@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ASCII Art Generator</title>
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #result {
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <h1>ASCII Art Generator</h1>
+    <form id="asciiForm">
+        <label for="inputText">Enter text here:</label>
+        <textarea id="inputText" name="inputText" required rows="4" cols="50" placeholder="Enter text here"></textarea>
+        <br>
+        <p>Choose banner file to display from:</p>
+        <div class="button-group">
+            <button type="button" id="standardBtn">Standard</button>
+            <button type="button" id="shadowBtn">Shadow</button>
+            <button type="button" id="thinkertoyBtn">Thinkertoy</button>
+            <button type="button" id="generateBtn">Generate ASCII Art</button>
+        </div>
+    </form>
+    <h2>Output:</h2>
+    <div id="result"></div>
+    <script>
+        async function generateASCIIArt(banner) {
+            const inputText = document.getElementById('inputText').value;
+            const response = await fetch('/ascii-art', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ banner: banner, input: inputText })
+            });
+            const result = await response.text();
+            document.getElementById('result').textContent = result;
+        }
+
+        document.getElementById('standardBtn').addEventListener('click', function () {
+    this.classList.add('active');
+    document.getElementById('shadowBtn').classList.remove('active');
+    document.getElementById('thinkertoyBtn').classList.remove('active');
+});
+
+document.getElementById('shadowBtn').addEventListener('click', function () {
+    this.classList.add('active');
+    document.getElementById('standardBtn').classList.remove('active');
+    document.getElementById('thinkertoyBtn').classList.remove('active');
+});
+
+document.getElementById('thinkertoyBtn').addEventListener('click', function () {
+    this.classList.add('active');
+    document.getElementById('standardBtn').classList.remove('active');
+    document.getElementById('shadowBtn').classList.remove('active');
+});
+
+document.getElementById('generateBtn').addEventListener('click', function () {
+    // Call the generateASCIIArt function with the selected style
+    var selectedStyle = document.querySelector('button.active').id.replace('Btn', '');
+    generateASCIIArt(selectedStyle);
+});
+
+    </script>
+</body>
+</html>

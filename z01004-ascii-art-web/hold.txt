@@ -1,0 +1,7 @@
+func pathHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		http.ServeFile(w, r, "static/index.html")
+	} else {
+		http.ServeFile(w, r, "static/errors.html")
+	}
+}
