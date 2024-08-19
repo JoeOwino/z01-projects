@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        text-align: center;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: #e74c3c;
+        font-size: 4rem;
+        margin-bottom: 0;
+    }
+    p {
+        font-size: 1.2rem;
+        color: #34495e;
+    }
+    .lost-astronaut {
+        width: 200px;
+        height: 200px;
+        margin: 2rem 0;
+    }
+    .btn {
+        display: inline-block;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #2980b9;
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+        <h1>405</h1>
+        <p>Method Not Allowed.</p>
+        <svg class="lost-astronaut" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <style>
+                .astronaut { animation: float 3s ease-in-out infinite; }
+            </style>
+            <g class="astronaut">
+                <circle cx="50" cy="50" r="35" fill="#e0e0e0"/>
+                <circle cx="50" cy="50" r="30" fill="#bdbdbd"/>
+                <circle cx="50" cy="40" r="20" fill="#ffffff"/>
+                <rect x="45" y="60" width="10" height="15" fill="#bdbdbd"/>
+                <circle cx="42" cy="38" r="4" fill="#000000"/>
+                <circle cx="58" cy="38" r="4" fill="#000000"/>
+            </g>
+        </svg>
+        <p>Don't worry, you can always return to our homepage:</p>
+        <a href="http://localhost:8080" class="btn">Go Home</a>
+    </div>
+    </body></html>
